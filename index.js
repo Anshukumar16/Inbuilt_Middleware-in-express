@@ -1,34 +1,31 @@
-import express from 'express';
-import path from 'path';
+import express from "express";
+import morgan from "morgan";
 const app = express();
 
-app.use(express.urlencoded({extended:false}));
-app.use(express.static('public'));
+app.use(morgan("dev"));
+app.get("/", (req, res) => {
+    res.send("homepage");
+});
 
+app.get("/about", (req, res) => {
+    res.send1("aboutpage");
+});
 
-app.get("/",(req,res)=>{
-    const absolutePath = path.resolve("view/home.html");
-    res.sendFile(absolutePath);
+app.get("/wait", (req, res) => 
+  {  setTimeout(() => {
+        res.send("Waited for 5 seconds");
+    }, 1000);
+});
+
+app.get("/error", (req, res) => {
+   const error = new Error('')
+   error.status = 404;
+   next(error);
+});
+
+function errorHandling(err, req, res, next) {
+    res.status(err.status || 500).send("Try after some time");
+}
+app.use(errorHandling);
     
-})
-
-
-app.get("/login",(req,res)=>{
-    res.send(`
-        <form action="/submit" method="post">
-            <input type="text" name="username" placeholder="username"/>
-            <input type="password" name="password" placeholder="password"/>
-            <button type="submit">login</button>
-        </form>
-    `);
-})
-
-app.post("/submit",(req,res)=>{
-    res.send(req.body);
-})
-
-app.get("/users",(req,res)=>{
-    res.send("users page");
-})
-
-app.listen(3001);
+app.listen(3200);

@@ -3,8 +3,10 @@ import morgan from "morgan";
 const app = express();
 
 app.use(morgan("dev"));
+
+app.set("view engine", "ejs");
 app.get("/", (req, res) => {
-    res.send("homepage");
+    res.render("home",{name:'Anil sidhu',age:20});
 });
 
 app.get("/about", (req, res) => {
